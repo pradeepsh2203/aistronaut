@@ -7,7 +7,7 @@ from index import emotion_check
 
 from worker_agents.sad_agent import sad_agent
 from worker_agents.happy_agent import happy_agent
-
+from utilities.videoHtml import returnVideoHtml
 def main():
     st.title("Image Processing with Streamlit")
 
@@ -46,10 +46,12 @@ def main():
                 response = sad_agent.run(sadPrompt)
                 st.html(response)
             elif(result[0]["dominant_emotion"]=="happy"):
-                happyPrompt = f"Find a good dance/song video for the user to vibe on.The search query for the youtube tool should not have any commas. Use video html tag for the youtube link . Ignore Invalid Format: Missing 'Action:' after 'Thought' .Use features of the user to make the content more relatable age:{result[0]['age']} race:{result[0]['dominant_race']} gender:{result[0]['dominant_gender']}. your response should be in html format."
+                happyPrompt = f"Find a good dance or song video for the user to vibe on by using the YouTube tool, ensuring that the search query contains no commas and personalizing the content using the user’s age ({result[0]['age']}), race ({result[0]['race']}), and gender ({result[0]['dominant_gender']}); respond in the exact format 'Thought: extract youtube urls', 'Action: [specify the tool you want to use]', and 'Action Input: [provide the input to that tool]'"
                 response = happy_agent.run(happyPrompt)
-                # print(response)
-                st.html(response)
+                print(response)
+                result = returnVideoHtml(response)
+                # print(result)
+                # st.html(result)
             # elif(result[0]["dominant_emotion"]=="angry"):
             #     response = angry_agent.run("Provide a detailed research on Mahakumbh Mela")
             #     st.write(response)
