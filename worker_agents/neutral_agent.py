@@ -14,7 +14,7 @@ class NeutralAgent:
         # self.agent = initialize_agent(tools, self.llm, agent="zero-shot-react-description", verbose=True,handle_parsing_errors=True)
     
     def run(self,prompt):
-        response = self.llm.run(prompt)
+        response = self.llm.invoke(prompt)
         return response
         
 
