@@ -4,6 +4,7 @@ import numpy as np
 from io import BytesIO
 from PIL import Image
 from index import emotion_check
+from customLlm import CustomLLM
 
 
 def main():
@@ -35,7 +36,10 @@ def main():
         if result:
             st.success(result)
             # You can display other results from process_image() here
-
+            agent= CustomLLM()
+            print(result[0]["dominant_emotion"],result[0]["age"],result[0]["dominant_race"],result[0]["dominant_gender"])
+            resp = agent.run(emotion=result[0]["dominant_emotion"],age=result[0]["age"], race=result[0]["dominant_race"], gender=result[0]["dominant_gender"])
+            st.write(resp)
 
 
     
