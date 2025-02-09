@@ -7,7 +7,9 @@ from index import emotion_check
 
 from worker_agents.sad_agent import sad_agent
 from worker_agents.happy_agent import happy_agent
+from worker_agents.neutral_agent import neutral_agent
 from utilities.videoHtml import returnVideoHtml
+import os
 def main():
     st.title("Image Processing with Streamlit")
 
@@ -55,9 +57,13 @@ def main():
             # elif(result[0]["dominant_emotion"]=="angry"):
             #     response = angry_agent.run("Provide a detailed research on Mahakumbh Mela")
             #     st.write(response)
-            # elif(result[0]["dominant_emotion"]=="neutral"):
-            #     response = neutral_agent.run("Provide a detailed research on Mahakumbh Mela")
-            #     st.write(response)
+            else:
+                neutralPrompt = f"Write an poem in the user's native language that is deeply motivational and uplifting. Tailor the content to resonate with the user by incorporating their demographic details: age ({result[0]['age']}), race ('{result[0]['dominant_race']}'), and gender ({result[0]['dominant_gender']}). The poem should emphasize positivity in life, human values, and the importance of national pride and identity, celebrating the beauty and heritage of their culture while inspiring the reader to embrace their potential and contribute positively to society.Also add few motivating quotes in the poem. Once you have the poem completed use the text_to_speech tool to convert the entire poem to audio format."
+                response = neutral_agent.run(neutralPrompt)
+                # st.write(response)
+                dist = os.path.join("./tools/audio.wav")
+                st.audio(dist, format='audio/wav')
+                # os.remove(dist)
 
     
 
