@@ -10,11 +10,11 @@ load_dotenv()
 class NeutralAgent:
     def __init__(self,base_url="https://api.aimlapi.com/v1", api_key=os.getenv("DEEPSEEK_API_KEY"), model="gpt-4o"):
         self.llm = ChatOpenAI(base_url=base_url, api_key=api_key, model=model, verbose=True)
-        tools = [speechTool]
-        self.agent = initialize_agent(tools, self.llm, agent="zero-shot-react-description", verbose=True,handle_parsing_errors=True)
+        # tools = []
+        # self.agent = initialize_agent(tools, self.llm, agent="zero-shot-react-description", verbose=True,handle_parsing_errors=True)
     
     def run(self,prompt):
-        response = self.agent.run(prompt)
+        response = self.llm.run(prompt)
         return response
         
 

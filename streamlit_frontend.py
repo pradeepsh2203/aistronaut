@@ -36,7 +36,15 @@ def main():
         with st.spinner("Processing..."):
             result =emotion_check(img_array)
 
-
+        raceToNationality = {
+            "asian":"Korean",
+            "black":"African",
+            "white":"American",
+            "indian":"Indian",
+            "middle eastern":"Arabic",
+            "latino hispanic":"Mexican"
+        }
+    # 'asian': np.float32(0.78937656), 'indian': np.float32(1.0885262), 'black': np.float32(0.14379863), 'white': np.float32(52.13019), 'middle eastern': np.float32(15.818904), 'latino hispanic': np.float32(30.029205)
         if result:
             st.write("Emotion detected:", result[0]["dominant_emotion"])
             st.write("Age detected:", result[0]["age"])
@@ -45,20 +53,20 @@ def main():
 
 
             if(result[0]["dominant_emotion"]=="sad"):
-                sadPrompt = f"Create a image of a animal to lighten the mood of a person who is feeling sad. Use img html to display the image. also create a joke to make the person laugh. Use features of the user to make the joke more relatable, use h1 tag for the joke. age:{result[0]['age']} race:{result[0]['dominant_race']} gender:{result[0]['dominant_gender']}. your response should be in html format."
+                sadPrompt = f"Create a image of a animal to lighten the mood of a person who is feeling sad. Use img html to display the image. also create a joke to make the person laugh. Use features of the user to make the joke more relatable, use h1 tag for the joke. age:{result[0]['age']} race:{result[0]['dominant_race']}, nationality:{raceToNationality[result[0]['dominant_race']]} gender:{result[0]['dominant_gender']}. your response should be in html format."
                 with st.spinner("Processing..."):
                     response = sad_agent.run(sadPrompt)
                 st.success("Below is what I can do to make you feel better")
                 st.html(response)
             elif(result[0]["dominant_emotion"]=="happy"):
-                happyPrompt = f"Find a good dance or song video for the user to vibe on by using the YouTube tool, ensuring that the search query contains no commas and personalizing the content using the user’s age ({result[0]['age']}), race ({result[0]['race']}), and gender ({result[0]['dominant_gender']}); respond in the exact format 'Thought: extract youtube urls', 'Action: [specify the tool you want to use]', and 'Action Input: [provide the input to that tool]'"
+                happyPrompt = f"Find a good dance or song video for the user to vibe on by using the YouTube tool, ensuring that the search query contains no commas and personalizing the content using the user’s age ({result[0]['age']}), race ({result[0]['race']}), nationality:{raceToNationality[result[0]['dominant_race']]}, and gender ({result[0]['dominant_gender']}); respond in the exact format 'Thought: extract youtube urls', 'Action: [specify the tool you want to use]', and 'Action Input: [provide the input to that tool]'"
                 with st.spinner("Processing..."):
                     response = happy_agent.run(happyPrompt)
                 # print(response)
                 st.success("Below is what I can do to make you feel better")
                 result = returnVideoHtml(response)
             else:
-                neutralPrompt = f"Write an poem in the user's native language that is deeply motivational and uplifting. Tailor the content to resonate with the user by incorporating their demographic details: age ({result[0]['age']}), race ('{result[0]['dominant_race']}'), and gender ({result[0]['dominant_gender']}). The poem should emphasize positivity in life, human values, and the importance of national pride and identity, celebrating the beauty and heritage of their culture while inspiring the reader to embrace their potential and contribute positively to society.Also add few motivating quotes in the poem. Once you have the poem completed use the text_to_speech tool to convert the entire poem to audio format."
+                neutralPrompt = f"Write an poem in the user's native language that is deeply motivational and uplifting. Tailor the content to resonate with the user by incorporating their demographic details: age ({result[0]['age']}), race ('{result[0]['dominant_race']}'), nationality:{raceToNationality[result[0]['dominant_race']]}, and gender ({result[0]['dominant_gender']}). The poem should emphasize positivity in life, human values, and the importance of national pride and identity, celebrating the beauty and heritage of their culture while inspiring the reader to embrace their potential and contribute positively to society.Also add few motivating quotes in the poem. Once you have the poem completed use the text_to_speech tool to convert the entire poem to audio format."
                 with st.spinner("Processing..."):
                     response = neutral_agent.run(neutralPrompt)
                 dist = os.path.join("./tools/audio.wav")
