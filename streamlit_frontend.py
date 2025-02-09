@@ -4,8 +4,9 @@ import numpy as np
 from io import BytesIO
 from PIL import Image
 from index import emotion_check
-from customLlm import CustomLLM
 
+from worker_agents.sad_agent import sad_agent
+from worker_agents.happy_agent import happy_agent
 
 def main():
     st.title("Image Processing with Streamlit")
@@ -36,11 +37,25 @@ def main():
         if result:
             st.success(result)
             # You can display other results from process_image() here
-            agent= CustomLLM()
-            print(result[0]["dominant_emotion"],result[0]["age"],result[0]["dominant_race"],result[0]["dominant_gender"])
-            resp = agent.run(emotion=result[0]["dominant_emotion"],age=result[0]["age"], race=result[0]["dominant_race"], gender=result[0]["dominant_gender"])
-            st.write(resp)
-
+            # agent= CustomLLM()
+            # print(result[0]["dominant_emotion"],result[0]["age"],result[0]["dominant_race"],result[0]["dominant_gender"])
+            # resp = agent.run(emotion=result[0]["dominant_emotion"],age=result[0]["age"], race=result[0]["dominant_race"], gender=result[0]["dominant_gender"])
+            # st.write(resp)
+            if(result[0]["dominant_emotion"]=="sad"):
+                sadPrompt = f"Create a image of a animal to lighten the mood of a person who is feeling sad. Use img html to display the image. also create a joke to make the person laugh. Use features of the user to make the joke more relatable, use h1 tag for the joke. age:{result[0]['age']} race:{result[0]['dominant_race']} gender:{result[0]['dominant_gender']}. your response should be in html format."
+                response = sad_agent.run(sadPrompt)
+                st.html(response)
+            elif(result[0]["dominant_emotion"]=="happy"):
+                happyPrompt = f"Find a good dance/song video for the user to vibe on.The search query for the youtube tool should not have any commas. Use video html tag for the youtube link . Ignore Invalid Format: Missing 'Action:' after 'Thought' .Use features of the user to make the content more relatable age:{result[0]['age']} race:{result[0]['dominant_race']} gender:{result[0]['dominant_gender']}. your response should be in html format."
+                response = happy_agent.run(happyPrompt)
+                # print(response)
+                st.html(response)
+            # elif(result[0]["dominant_emotion"]=="angry"):
+            #     response = angry_agent.run("Provide a detailed research on Mahakumbh Mela")
+            #     st.write(response)
+            # elif(result[0]["dominant_emotion"]=="neutral"):
+            #     response = neutral_agent.run("Provide a detailed research on Mahakumbh Mela")
+            #     st.write(response)
 
     
 
